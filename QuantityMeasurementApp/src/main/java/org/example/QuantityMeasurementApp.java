@@ -1,34 +1,33 @@
 package org.example;
 
 public class QuantityMeasurementApp {
-    public static boolean demonstrateLengthEquality(Length length1, Length length2) {
-        return length1.equals(length2);
-    }
-
-    public static void demonstrateFeetEquality() {
-        Length feet1 = new Length(1.0, Length.LengthUnit.FEET);
-        Length feet2 = new Length(1.0, Length.LengthUnit.FEET);
-
-        System.out.println("Feet equality: " + feet1.equals(feet2));
-    }
-
-    public static void demonstrateInchesEquality() {
-        Length inch1 = new Length(12.0, Length.LengthUnit.INCHES);
-        Length inch2 = new Length(12.0, Length.LengthUnit.INCHES);
-
-        System.out.println("Inches equality: " + inch1.equals(inch2));
-    }
-
-    public static void demonstrateFeetInchesComparison() {
-        Length feet = new Length(1.0, Length.LengthUnit.FEET);
-        Length inches = new Length(12.0, Length.LengthUnit.INCHES);
-
-        System.out.println("Feet and Inches comparison: " + feet.equals(inches));
-    }
 
     public static void main(String[] args) {
-        demonstrateFeetEquality();
-        demonstrateInchesEquality();
-        demonstrateFeetInchesComparison();
+
+        System.out.println("UC4 ");
+
+        // 1 Yard = 3 Feet
+        System.out.println(new Length(1.0, Length.LengthUnit.YARDS)
+                .equals(new Length(3.0, Length.LengthUnit.FEET)));  // true
+
+        // 1 Yard = 36 Inches
+        System.out.println(new Length(1.0, Length.LengthUnit.YARDS)
+                .equals(new Length(36.0, Length.LengthUnit.INCHES))); // true
+
+        // Yard to Yard
+        System.out.println(new Length(2.0, Length.LengthUnit.YARDS)
+                .equals(new Length(2.0, Length.LengthUnit.YARDS))); // true
+
+        // Centimeter to Centimeter
+        System.out.println(new Length(2.0, Length.LengthUnit.CENTIMETERS)
+                .equals(new Length(2.0, Length.LengthUnit.CENTIMETERS))); // true
+
+        // 1 cm = 0.393701 inches
+        System.out.println(new Length(1.0, Length.LengthUnit.CENTIMETERS)
+                .equals(new Length(0.393701, Length.LengthUnit.INCHES))); // true
+
+        // Negative case
+        System.out.println(new Length(1.0, Length.LengthUnit.YARDS)
+                .equals(new Length(2.0, Length.LengthUnit.FEET))); // false
     }
 }
