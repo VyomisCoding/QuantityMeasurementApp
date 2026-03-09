@@ -5,6 +5,8 @@ public class QuantityWeight {
     private final double value;
     private final WeightUnit unit;
 
+    private static final double EPSILON = 0.0001;
+
     public QuantityWeight(double value, WeightUnit unit) {
 
         if (!Double.isFinite(value))
@@ -21,6 +23,11 @@ public class QuantityWeight {
         return unit.convertToBaseUnit(value);
     }
 
+    // Rounding helper
+    private double round(double value) {
+        return Math.round(value * 100000.0) / 100000.0;
+    }
+
     // Conversion
     public QuantityWeight convertTo(WeightUnit targetUnit) {
 
@@ -31,10 +38,10 @@ public class QuantityWeight {
 
         double converted = targetUnit.convertFromBaseUnit(base);
 
-        return new QuantityWeight(converted, targetUnit);
+        return new QuantityWeight(round(converted), targetUnit);
     }
 
-    // Addition (UC6 equivalent)
+    // Addition (result in first operand unit)
     public QuantityWeight add(QuantityWeight other) {
 
         if (other == null)
@@ -47,10 +54,10 @@ public class QuantityWeight {
 
         double result = unit.convertFromBaseUnit(sum);
 
-        return new QuantityWeight(result, unit);
+        return new QuantityWeight(round(result), unit);
     }
 
-    // Addition with target unit (UC7 equivalent)
+    // Addition with target unit
     public QuantityWeight add(QuantityWeight other, WeightUnit targetUnit) {
 
         if (other == null)
@@ -66,10 +73,10 @@ public class QuantityWeight {
 
         double result = targetUnit.convertFromBaseUnit(sum);
 
-        return new QuantityWeight(result, targetUnit);
+        return new QuantityWeight(round(result), targetUnit);
     }
 
-    // Equality
+    // Equality with tolerance
     @Override
     public boolean equals(Object obj) {
 
@@ -80,14 +87,15 @@ public class QuantityWeight {
 
         QuantityWeight other = (QuantityWeight) obj;
 
-        return Double.compare(
-                this.convertToBaseUnit(),
-                other.convertToBaseUnit()) == 0;
+        double a = this.convertToBaseUnit();
+        double b = other.convertToBaseUnit();
+
+        return Math.abs(a - b) < EPSILON;
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(convertToBaseUnit());
+        return Double.hashCode(round(convertToBaseUnit()));
     }
 
     @Override
