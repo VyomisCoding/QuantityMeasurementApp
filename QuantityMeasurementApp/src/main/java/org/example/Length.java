@@ -1,24 +1,30 @@
 package org.example;
 
-public class Length{
+public class Length {
+
     private final double value;
     private final LengthUnit unit;
-    public enum LengthUnit{
-        FEET(12.0),            // 1 foot = 12 inches
+
+    public enum LengthUnit {
+        FEET(12.0),
         INCHES(1.0),           // base unit
-        YARDS(36.0),           // 1 yard = 36 inches
-        CENTIMETERS(0.393701); // 1 cm = 0.393701 inches
+        YARDS(36.0),
+        CENTIMETERS(0.393701);
 
         private final double conversionFactor;
-        LengthUnit(double conversionFactor){
+
+        LengthUnit(double conversionFactor) {
             this.conversionFactor = conversionFactor;
         }
-        public double getConversionFactor(){
+
+        public double getConversionFactor() {
             return conversionFactor;
         }
     }
-    
-    public Length(double value, LengthUnit unit){   // Constructor
+
+    // Constructor
+    public Length(double value, LengthUnit unit) {
+
         if (!Double.isFinite(value))
             throw new IllegalArgumentException("Value must be finite");
 
@@ -29,28 +35,55 @@ public class Length{
         this.unit = unit;
     }
 
-    private double convertToBaseUnit(){    // Convert to base unit (INCHES)
+    // Convert to base unit (INCHES)
+    private double convertToBaseUnit() {
         return value * unit.getConversionFactor();
     }
 
-    public static double convert(double value, LengthUnit source, LengthUnit target){    // STATIC CONVERSION API (UC5)
+    // UC5 Static Conversion
+    public static double convert(double value, LengthUnit source, LengthUnit target) {
+
         if (!Double.isFinite(value))
             throw new IllegalArgumentException("Value must be finite");
 
         if (source == null || target == null)
             throw new IllegalArgumentException("Units cannot be null");
 
-        double baseValue = value * source.getConversionFactor();        // Step 1: convert source → base (inches)
-
-        return baseValue / target.getConversionFactor();                // Step 2: base → target
+        double baseValue = value * source.getConversionFactor();
+        return baseValue / target.getConversionFactor();
     }
 
-    public Length convertTo(LengthUnit targetUnit){      // INSTANCE METHOD CONVERSION
+    // UC5 Instance Conversion
+    public Length convertTo(LengthUnit targetUnit) {
         double convertedValue = convert(this.value, this.unit, targetUnit);
         return new Length(convertedValue, targetUnit);
     }
 
-    public boolean compare(Length thatLength){           // Compare two Length objects
+    // UC6 Addition
+    public Length add(Length other) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Length cannot be null");
+
+        if (!Double.isFinite(other.value))
+            throw new IllegalArgumentException("Value must be finite");
+
+        // Convert both to base unit
+        double base1 = this.convertToBaseUnit();
+        double base2 = other.convertToBaseUnit();
+
+        // Add
+        double sumBase = base1 + base2;
+
+        // Convert back to first operand unit
+        double resultValue = sumBase / this.unit.getConversionFactor();
+
+        return new Length(resultValue, this.unit);
+    }
+
+    // Comparison
+    public boolean compare(Length thatLength) {
+
         if (thatLength == null)
             return false;
 
@@ -60,22 +93,26 @@ public class Length{
         ) == 0;
     }
 
-    @Override                     // equals() override
-    public boolean equals(Object o){
+    // equals override
+    @Override
+    public boolean equals(Object o) {
+
         if (this == o) return true;
+
         if (!(o instanceof Length)) return false;
 
         Length that = (Length) o;
+
         return compare(that);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Double.hashCode(convertToBaseUnit());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return value + " " + unit;
     }
 }
