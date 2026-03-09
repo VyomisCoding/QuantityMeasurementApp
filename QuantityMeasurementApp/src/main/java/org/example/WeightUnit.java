@@ -1,10 +1,10 @@
 package org.example;
 
-public enum WeightUnit {
+public enum WeightUnit implements IMeasurable {
 
-    KILOGRAM(1.0),        // base unit
-    GRAM(0.001),          // 1 g = 0.001 kg
-    POUND(0.453592);      // 1 lb ≈ 0.453592 kg
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(0.453592);
 
     private final double conversionFactor;
 
@@ -12,17 +12,23 @@ public enum WeightUnit {
         this.conversionFactor = conversionFactor;
     }
 
+    @Override
     public double getConversionFactor() {
         return conversionFactor;
     }
 
-    // Convert to base unit (KILOGRAM)
+    @Override
     public double convertToBaseUnit(double value) {
         return value * conversionFactor;
     }
 
-    // Convert from base unit (KILOGRAM)
+    @Override
     public double convertFromBaseUnit(double baseValue) {
         return baseValue / conversionFactor;
+    }
+
+    @Override
+    public String getUnitName() {
+        return name();
     }
 }
