@@ -1,75 +1,151 @@
 package org.example;
 
-public class QuantityMeasurementApp {
+public class QuantityMeasurementApp{
 
-    public static void main(String[] args) {
+        // --Subtraction Demo--
+    public static <U extends IMeasurable> void demonstrateSubtraction(
+            Quantity<U> q1,
+            Quantity<U> q2) {
 
-        System.out.println("--VOLUME MEASUREMENT DEMO--\n");
+        Quantity<U> result = q1.subtract(q2);
 
-        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-        Quantity<VolumeUnit> v3 = new Quantity<>(1.0, VolumeUnit.GALLON);
-        Quantity<VolumeUnit> v4 = new Quantity<>(500.0, VolumeUnit.MILLILITRE);
+        System.out.println("Input: " + q1 + " - " + q2 +
+                " → Output: " + result);
+    }
 
-        System.out.println("--Equality Comparisons--");
+    public static <U extends IMeasurable> void demonstrateSubtractionTarget(
+            Quantity<U> q1,
+            Quantity<U> q2,
+            U targetUnit) {
 
-        System.out.println("1 L == 1 L → " + new Quantity<>(1.0, VolumeUnit.LITRE).equals(new Quantity<>(1.0, VolumeUnit.LITRE)));
+        Quantity<U> result = q1.subtract(q2, targetUnit);
 
-        System.out.println("1 L == 1000 mL → " + new Quantity<>(1.0, VolumeUnit.LITRE).equals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
+        System.out.println("Input: " + q1 + " - " + q2 +
+                " (" + targetUnit + ") → Output: " + result);
+    }
 
-        System.out.println("1 gallon == 1 gallon → " + new Quantity<>(1.0, VolumeUnit.GALLON).equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
+    // --Division Demo--
+    public static <U extends IMeasurable> void demonstrateDivision(
+            Quantity<U> q1,
+            Quantity<U> q2) {
 
-        System.out.println("1 L == ~0.264172 gallon → " + new Quantity<>(1.0, VolumeUnit.LITRE).equals(new Quantity<>(0.264172, VolumeUnit.GALLON)));
+        double result = q1.divide(q2);
 
-        System.out.println("500 mL == 0.5 L → " + new Quantity<>(500.0, VolumeUnit.MILLILITRE).equals(new Quantity<>(0.5, VolumeUnit.LITRE)));
+        System.out.println("Input: " + q1 + " ÷ " + q2 +
+                " → Output: " + result);
+    }
 
-        System.out.println("3.78541 L == 1 gallon → " + new Quantity<>(3.78541, VolumeUnit.LITRE).equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
+    // --MAIN METHOD--
+    public static void main(String[] args){
 
-        System.out.println();
+        System.out.println("Subtraction with Implicit Target Unit:");
 
-        System.out.println("--Unit Conversions--");
+        demonstrateSubtraction(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(6.0, LengthUnit.INCHES)
+        );
 
-        System.out.println("1 L → mL = " + new Quantity<>(1.0, VolumeUnit.LITRE).convertTo(VolumeUnit.MILLILITRE));
+        demonstrateSubtraction(
+                new Quantity<>(10.0, WeightUnit.KILOGRAM),
+                new Quantity<>(5000.0, WeightUnit.GRAM)
+        );
 
-        System.out.println("2 gallon → L = " + new Quantity<>(2.0, VolumeUnit.GALLON).convertTo(VolumeUnit.LITRE));
+        demonstrateSubtraction(
+                new Quantity<>(5.0, VolumeUnit.LITRE),
+                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
+        );
 
-        System.out.println("500 mL → gallon = " + new Quantity<>(500.0, VolumeUnit.MILLILITRE).convertTo(VolumeUnit.GALLON));
 
-        System.out.println("0 L → mL = " + new Quantity<>(0.0, VolumeUnit.LITRE).convertTo(VolumeUnit.MILLILITRE));
+        System.out.println("\nSubtraction with Explicit Target Unit:");
 
-        System.out.println("1 L → L = " + new Quantity<>(1.0, VolumeUnit.LITRE).convertTo(VolumeUnit.LITRE));
+        demonstrateSubtractionTarget(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(6.0, LengthUnit.INCHES),
+                LengthUnit.INCHES
+        );
 
-        System.out.println();
+        demonstrateSubtractionTarget(
+                new Quantity<>(10.0, WeightUnit.KILOGRAM),
+                new Quantity<>(5000.0, WeightUnit.GRAM),
+                WeightUnit.GRAM
+        );
 
-        System.out.println("-Addition (Implicit Target Unit)-");
+        demonstrateSubtractionTarget(
+                new Quantity<>(5.0, VolumeUnit.LITRE),
+                new Quantity<>(2.0, VolumeUnit.LITRE),
+                VolumeUnit.MILLILITRE
+        );
 
-        System.out.println("1 L + 2 L = " + new Quantity<>(1.0, VolumeUnit.LITRE).add(new Quantity<>(2.0, VolumeUnit.LITRE)));
 
-        System.out.println("1 L + 1000 mL = " + new Quantity<>(1.0, VolumeUnit.LITRE).add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
+        System.out.println("\nSubtraction Resulting in Negative Values:");
 
-        System.out.println("500 mL + 0.5 L = " + new Quantity<>(500.0, VolumeUnit.MILLILITRE).add(new Quantity<>(0.5, VolumeUnit.LITRE)));
+        demonstrateSubtraction(
+                new Quantity<>(5.0, LengthUnit.FEET),
+                new Quantity<>(10.0, LengthUnit.FEET)
+        );
 
-        System.out.println("2 gallon + 3.78541 L = " + new Quantity<>(2.0, VolumeUnit.GALLON).add(new Quantity<>(3.78541, VolumeUnit.LITRE)));
+        demonstrateSubtraction(
+                new Quantity<>(2.0, WeightUnit.KILOGRAM),
+                new Quantity<>(5.0, WeightUnit.KILOGRAM)
+        );
 
-        System.out.println();
 
-        System.out.println("-Addition (Explicit Target Unit)-");
+        System.out.println("\nSubtraction Resulting in Zero:");
 
-        System.out.println("1 L + 1000 mL → mL = " + new Quantity<>(1.0, VolumeUnit.LITRE).add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE),VolumeUnit.MILLILITRE));
+        demonstrateSubtraction(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(120.0, LengthUnit.INCHES)
+        );
 
-        System.out.println("1 gallon + 3.78541 L → gallon = " + new Quantity<>(1.0, VolumeUnit.GALLON).add(new Quantity<>(3.78541, VolumeUnit.LITRE),VolumeUnit.GALLON));
+        demonstrateSubtraction(
+                new Quantity<>(1.0, VolumeUnit.LITRE),
+                new Quantity<>(1000.0, VolumeUnit.MILLILITRE)
+        );
 
-        System.out.println("500 mL + 1 L → gallon = " + new Quantity<>(500.0, VolumeUnit.MILLILITRE).add(new Quantity<>(1.0, VolumeUnit.LITRE),VolumeUnit.GALLON));
 
-        System.out.println("2 L + 4 gallon → L = " + new Quantity<>(2.0, VolumeUnit.LITRE).add(new Quantity<>(4.0, VolumeUnit.GALLON),VolumeUnit.LITRE));
+        System.out.println("\nDivision Operations:");
 
-        System.out.println();
+        demonstrateDivision(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(2.0, LengthUnit.FEET)
+        );
 
-        System.out.println("----- Category Incompatibility -----");
+        demonstrateDivision(
+                new Quantity<>(10.0, LengthUnit.FEET),
+                new Quantity<>(5.0, LengthUnit.FEET)
+        );
 
-        System.out.println("1 L == 1 FOOT → " + new Quantity<>(1.0, VolumeUnit.LITRE).equals(new Quantity<>(1.0, LengthUnit.FEET)));
+        demonstrateDivision(
+                new Quantity<>(24.0, LengthUnit.INCHES),
+                new Quantity<>(2.0, LengthUnit.FEET)
+        );
 
-        System.out.println("1 L == 1 KG → " + new Quantity<>(1.0, VolumeUnit.LITRE).equals(new Quantity<>(1.0, WeightUnit.KILOGRAM)));
+        demonstrateDivision(
+                new Quantity<>(10.0, WeightUnit.KILOGRAM),
+                new Quantity<>(5.0, WeightUnit.KILOGRAM)
+        );
 
+        demonstrateDivision(
+                new Quantity<>(5.0, VolumeUnit.LITRE),
+                new Quantity<>(10.0, VolumeUnit.LITRE)
+        );
+
+
+        System.out.println("\nDivision with Different Units:");
+
+        demonstrateDivision(
+                new Quantity<>(12.0, LengthUnit.INCHES),
+                new Quantity<>(1.0, LengthUnit.FEET)
+        );
+
+        demonstrateDivision(
+                new Quantity<>(2000.0, WeightUnit.GRAM),
+                new Quantity<>(1.0, WeightUnit.KILOGRAM)
+        );
+
+        demonstrateDivision(
+                new Quantity<>(1000.0, VolumeUnit.MILLILITRE),
+                new Quantity<>(1.0, VolumeUnit.LITRE)
+        );
     }
 }

@@ -24,7 +24,7 @@ public class Quantity<U extends IMeasurable> {
     }
 
     private double round(double value) {
-        return Math.round(value * 100000.0) / 100000.0;
+    return Math.round(value * 100000.0) / 100000.0;
     }
 
     // Conversion
@@ -74,6 +74,71 @@ public class Quantity<U extends IMeasurable> {
 
         return new Quantity<>(round(result), targetUnit);
     }
+
+    // Subtraction(implicit unit)
+
+    public Quantity<U> subtract(Quantity<U> other) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Quantity cannot be null");
+
+        if (this.unit.getClass() != other.unit.getClass())
+            throw new IllegalArgumentException("Incompatible measurement types");
+
+        double base1 = unit.convertToBaseUnit(value);
+        double base2 = other.unit.convertToBaseUnit(other.value);
+
+        double resultBase = base1 - base2;
+
+        double result = unit.convertFromBaseUnit(resultBase);
+
+        return new Quantity<>(round(result), unit);
+    }
+
+    // Subtraction (explicit target unit)
+
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Other quantity cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        if (!this.unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Different measurement categories");
+
+        double base1 = this.unit.convertToBaseUnit(this.value);
+        double base2 = other.unit.convertToBaseUnit(other.value);
+
+        double resultBase = base1 - base2;
+
+        double result = targetUnit.convertFromBaseUnit(resultBase);
+
+        return new Quantity<>(result, targetUnit);
+    }
+
+    // Division
+    public double divide(Quantity<U> other) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Quantity cannot be null");
+
+        if (this.unit.getClass() != other.unit.getClass())
+            throw new IllegalArgumentException("Incompatible measurement types");
+
+        double base1 = unit.convertToBaseUnit(value);
+        double base2 = other.unit.convertToBaseUnit(other.value);
+
+        if (base2 == 0)
+            throw new ArithmeticException("Division by zero");
+
+        return base1 / base2;
+    }
+
+    // private double round(double value) {
+    //     return Math.round(value * 100.0) / 100.0;
+    // }
 
     // Equality
     @Override
