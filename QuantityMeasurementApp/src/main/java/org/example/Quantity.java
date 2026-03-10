@@ -70,7 +70,11 @@ public class Quantity<U extends IMeasurable> {
     }
 
     // Core Arithmetic Engine
-    private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation) {
+    private double performBaseArithmetic(Quantity<U> other,
+            ArithmeticOperation operation) {
+
+        this.unit.validateOperationSupport(operation.name());
+        other.unit.validateOperationSupport(operation.name());
 
         double base1 = this.unit.convertToBaseUnit(this.value);
         double base2 = other.unit.convertToBaseUnit(other.value);
@@ -121,14 +125,15 @@ public class Quantity<U extends IMeasurable> {
 
     // CONVERSION
     public Quantity<U> convertTo(U targetUnit) {
+
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
 
         double base = unit.convertToBaseUnit(value);
 
-        double converted = targetUnit.convertFromBaseUnit(base);
+        double result = targetUnit.convertFromBaseUnit(base);
 
-        return new Quantity<>(converted, targetUnit);
+        return new Quantity<>(result, targetUnit);
     }
 
     // EQUALS
