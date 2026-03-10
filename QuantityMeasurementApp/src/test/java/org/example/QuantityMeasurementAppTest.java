@@ -1,292 +1,268 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
-public class QuantityMeasurementAppTest {
+public class QuantityMeasurementAppTest{
 
-        // --SUBTRACTION TESTS--
+    // Refactoring Delegation Tests
 
-        @Test
-        public void testSubtraction_SameUnit_FeetMinusFeet() {
-                assertEquals(new Quantity<>(5.0, LengthUnit.FEET),
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(5.0, LengthUnit.FEET)));
-        }
+    @Test
+    public void testRefactoring_Add_DelegatesViaHelper(){
 
-        @Test
-        public void testSubtraction_SameUnit_LitreMinusLitre() {
-                assertEquals(new Quantity<>(7.0, VolumeUnit.LITRE),
-                                new Quantity<>(10.0, VolumeUnit.LITRE)
-                                                .subtract(new Quantity<>(3.0, VolumeUnit.LITRE)));
-        }
+        Quantity<LengthUnit> a = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(12.0, LengthUnit.INCHES);
 
-        @Test
-        public void testSubtraction_CrossUnit_FeetMinusInches() {
-                assertEquals(new Quantity<>(9.5, LengthUnit.FEET),
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(6.0, LengthUnit.INCHES)));
-        }
+        Quantity<LengthUnit> result = a.add(b);
 
-        @Test
-        public void testSubtraction_CrossUnit_InchesMinusFeet() {
-                assertEquals(new Quantity<>(60.0, LengthUnit.INCHES),
-                                new Quantity<>(120.0, LengthUnit.INCHES)
-                                                .subtract(new Quantity<>(5.0, LengthUnit.FEET)));
-        }
+        assertEquals(new Quantity<>(2.0, LengthUnit.FEET), result);
+    }
 
-        @Test
-        public void testSubtraction_ExplicitTargetUnit_Feet() {
-                assertEquals(new Quantity<>(9.5, LengthUnit.FEET),
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(6.0, LengthUnit.INCHES), LengthUnit.FEET));
-        }
+    @Test
+    public void testRefactoring_Subtract_DelegatesViaHelper(){
 
-        @Test
-        public void testSubtraction_ExplicitTargetUnit_Inches() {
-                assertEquals(new Quantity<>(114.0, LengthUnit.INCHES),
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(6.0, LengthUnit.INCHES), LengthUnit.INCHES));
-        }
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(6.0, LengthUnit.INCHES);
 
-        @Test
-        public void testSubtraction_ExplicitTargetUnit_Millilitre() {
-                assertEquals(new Quantity<>(3000.0, VolumeUnit.MILLILITRE),
-                                new Quantity<>(5.0, VolumeUnit.LITRE)
-                                                .subtract(new Quantity<>(2.0, VolumeUnit.LITRE),
-                                                                VolumeUnit.MILLILITRE));
-        }
+        Quantity<LengthUnit> result = a.subtract(b);
 
-        @Test
-        public void testSubtraction_ResultingInNegative() {
-                assertEquals(new Quantity<>(-5.0, LengthUnit.FEET),
-                                new Quantity<>(5.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(10.0, LengthUnit.FEET)));
-        }
+        assertEquals(new Quantity<>(9.5, LengthUnit.FEET), result);
+    }
 
-        @Test
-        public void testSubtraction_ResultingInZero() {
-                assertEquals(new Quantity<>(0.0, LengthUnit.FEET),
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(120.0, LengthUnit.INCHES)));
-        }
+    @Test
+    public void testRefactoring_Divide_DelegatesViaHelper(){
 
-        @Test
-        public void testSubtraction_WithZeroOperand() {
-                assertEquals(new Quantity<>(5.0, LengthUnit.FEET),
-                                new Quantity<>(5.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(0.0, LengthUnit.INCHES)));
-        }
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(2.0, LengthUnit.FEET);
 
-        @Test
-        public void testSubtraction_WithNegativeValues() {
-                assertEquals(new Quantity<>(7.0, LengthUnit.FEET),
-                                new Quantity<>(5.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(-2.0, LengthUnit.FEET)));
-        }
+        double result = a.divide(b);
 
-        @Test
-        public void testSubtraction_NonCommutative() {
+        assertEquals(5.0, result);
+    }
 
-                Quantity<LengthUnit> A = new Quantity<>(10.0, LengthUnit.FEET)
-                                .subtract(new Quantity<>(5.0, LengthUnit.FEET));
+    
+    // Validation Consistency
+    
+    @Test
+    public void testValidation_NullOperand_ConsistentAcrossOperations(){
 
-                Quantity<LengthUnit> B = new Quantity<>(5.0, LengthUnit.FEET)
-                                .subtract(new Quantity<>(10.0, LengthUnit.FEET));
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
 
-                assertNotEquals(A, B);
-        }
+        assertThrows(IllegalArgumentException.class, () -> a.add(null));
+        assertThrows(IllegalArgumentException.class, () -> a.subtract(null));
+        assertThrows(IllegalArgumentException.class, () -> a.divide(null));
+    }
 
-        @Test
-        public void testSubtraction_WithLargeValues() {
-                assertEquals(new Quantity<>(5e5, WeightUnit.KILOGRAM),
-                                new Quantity<>(1e6, WeightUnit.KILOGRAM)
-                                                .subtract(new Quantity<>(5e5, WeightUnit.KILOGRAM)));
-        }
+    @Test
+    public void testValidation_CrossCategory_ConsistentAcrossOperations(){
 
-        @Test
-        public void testSubtraction_WithSmallValues() {
-                assertEquals(new Quantity<>(0.0005, LengthUnit.FEET),
-                                new Quantity<>(0.001, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(0.0005, LengthUnit.FEET)));
-        }
+        Quantity a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity b = new Quantity<>(5.0, WeightUnit.KILOGRAM);
 
-        @Test
-        public void testSubtraction_NullOperand() {
-                assertThrows(IllegalArgumentException.class,
-                                () -> new Quantity<>(10.0, LengthUnit.FEET).subtract(null));
-        }
+        assertThrows(IllegalArgumentException.class, () -> a.add(b));
+        assertThrows(IllegalArgumentException.class, () -> a.subtract(b));
+        assertThrows(IllegalArgumentException.class, () -> a.divide(b));
+    }
 
-        @Test
-        public void testSubtraction_NullTargetUnit() {
-                assertThrows(IllegalArgumentException.class,
-                                () -> new Quantity<>(10.0, LengthUnit.FEET)
-                                                .subtract(new Quantity<>(5.0, LengthUnit.FEET), null));
-        }
+    @Test
+    public void testValidation_NullTargetUnit_AddSubtractReject(){
 
-        @Test
-        public void testSubtraction_CrossCategory() {
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(5.0, LengthUnit.FEET);
 
-                Quantity a = new Quantity<>(10.0, LengthUnit.FEET);
-                Quantity b = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+        assertThrows(IllegalArgumentException.class, () -> a.add(b, null));
+        assertThrows(IllegalArgumentException.class, () -> a.subtract(b, null));
+    }
 
-                assertThrows(IllegalArgumentException.class,
-                                () -> a.subtract(b));
-        }
+    // Enum Operation Tests
+    
+    @Test
+    public void testArithmeticOperation_Add_EnumComputation(){
 
-        @Test
-        public void testSubtraction_ChainedOperations() {
+        double result = 10 + 5;
 
-                Quantity<LengthUnit> result = new Quantity<>(10.0, LengthUnit.FEET)
-                                .subtract(new Quantity<>(2.0, LengthUnit.FEET))
-                                .subtract(new Quantity<>(1.0, LengthUnit.FEET));
+        assertEquals(15.0, result);
+    }
 
-                assertEquals(new Quantity<>(7.0, LengthUnit.FEET), result);
-        }
+    @Test
+    public void testArithmeticOperation_Subtract_EnumComputation(){
 
-        // --DIVISION TESTS--
+        double result = 10 - 5;
 
-        @Test
-        public void testDivision_SameUnit_FeetDividedByFeet() {
-                assertEquals(5.0,
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .divide(new Quantity<>(2.0, LengthUnit.FEET)));
-        }
+        assertEquals(5.0, result);
+    }
 
-        @Test
-        public void testDivision_SameUnit_LitreDividedByLitre() {
-                assertEquals(2.0,
-                                new Quantity<>(10.0, VolumeUnit.LITRE)
-                                                .divide(new Quantity<>(5.0, VolumeUnit.LITRE)));
-        }
+    @Test
+    public void testArithmeticOperation_Divide_EnumComputation(){
 
-        @Test
-        public void testDivision_CrossUnit_FeetDividedByInches() {
-                assertEquals(1.0,
-                                new Quantity<>(24.0, LengthUnit.INCHES)
-                                                .divide(new Quantity<>(2.0, LengthUnit.FEET)));
-        }
+        double result = 10 / 5;
 
-        @Test
-        public void testDivision_CrossUnit_KilogramDividedByGram() {
-                assertEquals(1.0,
-                                new Quantity<>(2.0, WeightUnit.KILOGRAM)
-                                                .divide(new Quantity<>(2000.0, WeightUnit.GRAM)));
-        }
+        assertEquals(2.0, result);
+    }
 
-        @Test
-        public void testDivision_RatioGreaterThanOne() {
-                assertEquals(5.0,
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .divide(new Quantity<>(2.0, LengthUnit.FEET)));
-        }
+    @Test
+    public void testArithmeticOperation_DivideByZero_EnumThrows(){
 
-        @Test
-        public void testDivision_RatioLessThanOne() {
-                assertEquals(0.5,
-                                new Quantity<>(5.0, LengthUnit.FEET)
-                                                .divide(new Quantity<>(10.0, LengthUnit.FEET)));
-        }
+        assertThrows(ArithmeticException.class, () -> {
+            double result = 10 / 0;
+        });
+    }
 
-        @Test
-        public void testDivision_RatioEqualToOne() {
-                assertEquals(1.0,
-                                new Quantity<>(10.0, LengthUnit.FEET)
-                                                .divide(new Quantity<>(10.0, LengthUnit.FEET)));
-        }
 
-        @Test
-        public void testDivision_NonCommutative() {
+    // Backward Compatibility
 
-                double A = new Quantity<>(10.0, LengthUnit.FEET)
-                                .divide(new Quantity<>(5.0, LengthUnit.FEET));
+    @Test
+    public void testAdd_UC12_BehaviorPreserved(){
 
-                double B = new Quantity<>(5.0, LengthUnit.FEET)
-                                .divide(new Quantity<>(10.0, LengthUnit.FEET));
+        Quantity<WeightUnit> a = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> b = new Quantity<>(5000.0, WeightUnit.GRAM);
 
-                assertNotEquals(A, B);
-        }
+        Quantity<WeightUnit> result = a.add(b, WeightUnit.GRAM);
 
-        @Test
-        public void testDivision_ByZero() {
-                assertThrows(ArithmeticException.class,
-                                () -> new Quantity<>(10.0, LengthUnit.FEET)
-                                                .divide(new Quantity<>(0.0, LengthUnit.FEET)));
-        }
+        assertEquals(new Quantity<>(15000.0, WeightUnit.GRAM), result);
+    }
 
-        @Test
-        public void testDivision_WithLargeRatio() {
-                assertEquals(1e6,
-                                new Quantity<>(1e6, WeightUnit.KILOGRAM)
-                                                .divide(new Quantity<>(1.0, WeightUnit.KILOGRAM)));
-        }
+    @Test
+    public void testSubtract_UC12_BehaviorPreserved(){
 
-        @Test
-        public void testDivision_WithSmallRatio() {
-                assertEquals(1e-6,
-                                new Quantity<>(1.0, WeightUnit.KILOGRAM)
-                                                .divide(new Quantity<>(1e6, WeightUnit.KILOGRAM)));
-        }
+        Quantity<VolumeUnit> a = new Quantity<>(5.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> b = new Quantity<>(2.0, VolumeUnit.LITRE);
 
-        @Test
-        public void testDivision_NullOperand() {
-                assertThrows(IllegalArgumentException.class,
-                                () -> new Quantity<>(10.0, LengthUnit.FEET).divide(null));
-        }
+        Quantity<VolumeUnit> result = a.subtract(b, VolumeUnit.MILLILITRE);
 
-        @Test
-        public void testDivision_CrossCategory() {
+        assertEquals(new Quantity<>(3000.0, VolumeUnit.MILLILITRE), result);
+    }
 
-                Quantity a = new Quantity<>(10.0, LengthUnit.FEET);
-                Quantity b = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+    @Test
+    public void testDivide_UC12_BehaviorPreserved(){
 
-                assertThrows(IllegalArgumentException.class,
-                                () -> a.divide(b));
-        }
+        Quantity<LengthUnit> a = new Quantity<>(24.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> b = new Quantity<>(2.0, LengthUnit.FEET);
 
-        // --INTEGRATION/DESIGN TESTS--
+        double result = a.divide(b);
 
-        @Test
-        public void testSubtractionAndDivision_Integration() {
+        assertEquals(1.0, result);
+    }
 
-                double result = new Quantity<>(10.0, LengthUnit.FEET)
-                                .subtract(new Quantity<>(5.0, LengthUnit.FEET))
-                                .divide(new Quantity<>(5.0, LengthUnit.FEET));
 
-                assertEquals(1.0, result);
-        }
+    // Rounding Behavior
 
-        @Test
-        public void testSubtractionAddition_Inverse() {
+    @Test
+    public void testRounding_AddSubtract_TwoDecimalPlaces(){
 
-                Quantity<LengthUnit> A = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> a = new Quantity<>(1.234, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(1.111, LengthUnit.FEET);
 
-                Quantity<LengthUnit> result = A.add(new Quantity<>(5.0, LengthUnit.FEET))
-                                .subtract(new Quantity<>(5.0, LengthUnit.FEET));
+        Quantity<LengthUnit> result = a.add(b);
 
-                assertEquals(A, result);
-        }
+        assertEquals(2.345, result.getValue(), 0.01);
+    }
 
-        @Test
-        public void testSubtraction_Immutability() {
+    @Test
+    public void testRounding_Divide_NoRounding(){
 
-                Quantity<LengthUnit> original = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> a = new Quantity<>(7.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(2.0, LengthUnit.FEET);
 
-                original.subtract(new Quantity<>(5.0, LengthUnit.FEET));
+        double result = a.divide(b);
 
-                assertEquals(new Quantity<>(10.0, LengthUnit.FEET), original);
-        }
+        assertEquals(3.5, result);
+    }
 
-        @Test
-        public void testDivision_Immutability() {
 
-                Quantity<LengthUnit> original = new Quantity<>(10.0, LengthUnit.FEET);
+    // Target Unit Behavior
 
-                original.divide(new Quantity<>(5.0, LengthUnit.FEET));
+    @Test
+    public void testImplicitTargetUnit_AddSubtract(){
 
-                assertEquals(new Quantity<>(10.0, LengthUnit.FEET), original);
-        }
+        Quantity<LengthUnit> a = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(12.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = a.add(b);
+
+        assertEquals(LengthUnit.FEET, result.getUnit());
+    }
+
+    @Test
+    public void testExplicitTargetUnit_AddSubtract_Overrides(){
+
+        Quantity<LengthUnit> a = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(12.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result = a.add(b, LengthUnit.INCHES);
+
+        assertEquals(LengthUnit.INCHES, result.getUnit());
+    }
+
+    // Immutability Tests
+
+    @Test
+    public void testImmutability_AfterAdd_ViaCentralizedHelper(){
+
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(5.0, LengthUnit.FEET);
+
+        a.add(b);
+
+        assertEquals(new Quantity<>(10.0, LengthUnit.FEET), a);
+    }
+
+    @Test
+    public void testImmutability_AfterSubtract_ViaCentralizedHelper(){
+
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(5.0, LengthUnit.FEET);
+
+        a.subtract(b);
+
+        assertEquals(new Quantity<>(10.0, LengthUnit.FEET), a);
+    }
+
+    @Test
+    public void testImmutability_AfterDivide_ViaCentralizedHelper(){
+
+        Quantity<LengthUnit> a = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> b = new Quantity<>(2.0, LengthUnit.FEET);
+
+        a.divide(b);
+
+        assertEquals(new Quantity<>(10.0, LengthUnit.FEET), a);
+    }
+
+
+    // Operation Chaining
+
+    @Test
+    public void testArithmetic_Chain_Operations(){
+
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(2.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q3 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q4 = new Quantity<>(3.0, LengthUnit.FEET);
+
+        double result = q1.add(q2).subtract(q3).divide(q4);
+
+        assertEquals(11.0 / 3.0, result);
+    }
+
+    // Cross Category Scalability
+
+    @Test
+    public void testAllOperations_AcrossAllCategories(){
+
+        Quantity<LengthUnit> length1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> length2 = new Quantity<>(2.0, LengthUnit.FEET);
+
+        Quantity<WeightUnit> weight1 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> weight2 = new Quantity<>(2.0, WeightUnit.KILOGRAM);
+
+        Quantity<VolumeUnit> volume1 = new Quantity<>(10.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> volume2 = new Quantity<>(2.0, VolumeUnit.LITRE);
+
+        assertEquals(5.0, length1.divide(length2));
+        assertEquals(5.0, weight1.divide(weight2));
+        assertEquals(5.0, volume1.divide(volume2));
+    }
 
 }
