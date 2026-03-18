@@ -34,4 +34,9 @@ public class QuantityMeasurementEntity implements Serializable {
     public String getError() {
         return error;
     }
+
+    @Override
+    public String toString(){
+        return operation+" "+result;
+    }
 }

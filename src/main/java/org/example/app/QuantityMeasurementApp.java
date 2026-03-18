@@ -2,15 +2,16 @@ package org.example.app;
 
 import org.example.controller.QuantityMeasurementController;
 import org.example.dto.QuantityDTO;
+import org.example.repository.IQuantityMeasurementRepository;
 import org.example.repository.QuantityMeasurementCacheRepository;
+import org.example.repository.QuantityMeasurementDatabaseRepository;
 import org.example.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        QuantityMeasurementCacheRepository repository =
-                QuantityMeasurementCacheRepository.getInstance();
+        IQuantityMeasurementRepository repository = new QuantityMeasurementDatabaseRepository();
 
         QuantityMeasurementServiceImpl service =
                 new QuantityMeasurementServiceImpl(repository);
@@ -30,5 +31,7 @@ public class QuantityMeasurementApp {
         System.out.println(controller.performConversion(q1,"INCH"));
 
         System.out.println(controller.performDivision(q1,new QuantityDTO(1,"FEET","LENGTH")));
+
+        System.out.println(repository.findAll());
     }
 }
