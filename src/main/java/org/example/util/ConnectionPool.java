@@ -5,6 +5,14 @@ import java.sql.DriverManager;
 
 public class ConnectionPool {
 
+    static {
+        try {
+            Class.forName(ApplicationConfig.get("db.driver")); // 🔥 IMPORTANT
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Driver not found", e);
+        }
+    }
+
     public static Connection getConnection() {
         try {
             return DriverManager.getConnection(
@@ -13,7 +21,8 @@ public class ConnectionPool {
                     ApplicationConfig.get("db.password")
             );
         } catch (Exception e) {
-            throw new RuntimeException("DB Connection Failed");
+            e.printStackTrace(); // debugging
+            throw new RuntimeException("DB Connection Failed", e);
         }
     }
 }
