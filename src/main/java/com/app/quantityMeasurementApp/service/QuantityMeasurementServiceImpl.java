@@ -1,7 +1,7 @@
 package com.app.quantityMeasurementApp.service;
 
-import com.app.QuantityMeasurementApp.core.Quantity;
-import com.app.QuantityMeasurementApp.dto.QuantityMeasurementDTO;
+import com.app.quantityMeasurementApp.core.Quantity;
+import com.app.quantityMeasurementApp.dto.QuantityMeasurementDTO;
 import com.app.quantityMeasurementApp.entity.QuantityDTO;
 import com.app.quantityMeasurementApp.entity.QuantityMeasurementEntity;
 import com.app.quantityMeasurementApp.entity.QuantityModel;

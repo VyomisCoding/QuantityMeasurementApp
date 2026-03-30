@@ -1,10 +1,10 @@
-package com.app.QuantityMeasurementApp.controller;
+package com.app.quantityMeasurementApp.controller;
 
-import com.app.QuantityMeasurementApp.dto.QuantityMeasurementDTO;
-import com.app.QuantityMeasurementApp.dto.request.ArithmeticRequestDTO;
-import com.app.QuantityMeasurementApp.dto.request.CompareRequestDTO;
-import com.app.QuantityMeasurementApp.dto.request.ConvertRequestDTO;
-import com.app.QuantityMeasurementApp.service.IQuantityMeasurementService;
+import com.app.quantityMeasurementApp.dto.QuantityMeasurementDTO;
+import com.app.quantityMeasurementApp.dto.request.ArithmeticRequestDTO;
+import com.app.quantityMeasurementApp.dto.request.CompareRequestDTO;
+import com.app.quantityMeasurementApp.dto.request.ConvertRequestDTO;
+import com.app.quantityMeasurementApp.service.IQuantityMeasurementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

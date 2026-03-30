@@ -1,6 +1,6 @@
-package com.app.QuantityMeasurementApp.dto;
+package com.app.quantityMeasurementApp.dto;
 
-import com.app.QuantityMeasurementApp.entity.QuantityMeasurementEntity;
+import com.app.quantityMeasurementApp.entity.QuantityMeasurementEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;

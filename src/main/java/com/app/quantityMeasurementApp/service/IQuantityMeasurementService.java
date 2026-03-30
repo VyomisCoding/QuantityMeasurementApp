@@ -1,6 +1,6 @@
-package com.app.QuantityMeasurementApp.service;
+package com.app.quantityMeasurementApp.service;
 
-import com.app.QuantityMeasurementApp.dto.QuantityMeasurementDTO;
+import com.app.quantityMeasurementApp.dto.QuantityMeasurementDTO;
 import com.app.quantityMeasurementApp.entity.QuantityDTO;
 
 import java.util.List;

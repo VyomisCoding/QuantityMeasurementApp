@@ -1,5 +1,5 @@
-package com.app.QuantityMeasurementApp.core;
-import com.app.QuantityMeasurementApp.model.IMeasurable;
+package com.app.quantityMeasurementApp.core;
+import com.app.quantityMeasurementApp.model.IMeasurable;
 
 public class Quantity<U extends IMeasurable> {
     private double value;
