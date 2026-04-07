@@ -1,0 +1,10 @@
+.git/
+.gitignore
+README.md
+HELP.md
+mvnw
+mvnw.cmd
+pom.xml
+src/
+.dockerignore
+Dockerfile
